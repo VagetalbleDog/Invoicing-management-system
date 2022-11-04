@@ -16,4 +16,19 @@ export class EmployeeService {
     async find(name:string|undefined,username:string|undefined,id:number|undefined):Promise<EmployeeEntity[]>{
         return this.employeeEntity.findBy({"name":name,"username":username,"id":id});
     }
+    /**
+     * 注册用户，需要给出所有用户信息
+     * dto:EmployeeEntity
+     * @return Promise<void>
+     */
+    async regsiterUser(user:EmployeeEntity){
+        return this.employeeEntity.insert(user)
+    }
+    /**
+     * 删除用户，传入id
+     * @return promise<void>
+     */
+    async deleteUser(id:number){
+        return this.employeeEntity.delete({'id':id})
+    }
 }
