@@ -4,5 +4,8 @@
  * const roles = this.reflector.get<string[]>('roles',context.getHandler());
  * roles = ['admin','normal']
  */
-import {SetMetadata} from '@nestjs/common'
-export const Roles = (...roles:string[]) => SetMetadata('roles',roles)
+import {SetMetadata} from '@nestjs/common';
+import { applyDecorators } from '@nestjs/common';
+export const Roles = (...roles:string[]) => applyDecorators(
+    SetMetadata('roles', roles)
+  );
