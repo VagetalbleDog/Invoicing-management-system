@@ -1,9 +1,12 @@
-import { Body, Controller, Post, } from '@nestjs/common';
+import { Body, Controller, Get, Post, } from '@nestjs/common';
 import { AuthService } from './auth.service';
-
+import { ValidateService } from 'src/utils/svg.validate';
 @Controller('auth')
 export class AuthController {
-    constructor(private readonly authService:AuthService){}
+    constructor(
+        private readonly authService:AuthService,
+        private readonly validateService:ValidateService
+        ){}
     @Post('login')
     async login(@Body() body){
         const {username,password} = body;
@@ -15,5 +18,13 @@ export class AuthController {
             }
         }
         return this.authService.login(user)
+    }
+    @Get('code')
+    async getCode(){
+        const svgCaptcha = await this.validateService.captcha();
+        return {
+            svg:svgCaptcha.data,
+            text:svgCaptcha.text
+        }
     }
 }

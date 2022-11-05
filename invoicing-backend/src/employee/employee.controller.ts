@@ -21,7 +21,10 @@ export class EmployeeController {
     @Roles('admin')
     async query(@Query() query){
         const {username,id,name} = query;
-        return this.employeeService.find(name,username,id)
+        const users = await this.employeeService.find(name,username,id);
+        //把密码字段去除再返回
+        const result = users.map((employee)=>{return {id:employee.id,name:employee.name,username:employee.username,sex:employee.sex,userType:employee.userType}})
+        return result;
     }
 
 
@@ -65,7 +68,25 @@ export class EmployeeController {
     @ApiBody({
         type:EmployeeEntity
     })
-    async registerUser(){
-
+    @HttpCode(201)
+    async registerUser(@Body() user:any){
+        const nowUsers = await this.employeeService.find(undefined,undefined,undefined);
+        const newId = nowUsers.length>0?nowUsers[nowUsers.length-1].id+1:1;
+        const {username,name,password,sex,userType} = user;
+        if(userType===1){
+            return {
+                code:400,
+                message:'您不能注册管理员用户'
+            }
+        }
+        const newEmployee = {
+            id:newId,username,name,password,sex,userType
+        }
+        await this.employeeService.regsiterUser(newEmployee);
+        return {
+            code:201,
+            message:"注册成功",
+            employee:newEmployee
+        }
     }
 }
