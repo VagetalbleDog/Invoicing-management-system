@@ -31,4 +31,17 @@ export class EmployeeService {
     async deleteUser(id:number){
         return this.employeeEntity.delete({'id':id})
     }
+    /**
+     * 
+     * @param id 
+     * @param username 
+     * @param name 
+     * @param sex 
+     * @param userType 
+     * @param password 
+     * @return Promise<void>
+     */
+    async updateUser(id:number,username:string,name:string,sex:number,userType:number,password:string){
+        this.employeeEntity.update({id:id},{username,name,sex,userType,password})
+    }
 }

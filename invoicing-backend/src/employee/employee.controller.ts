@@ -89,4 +89,23 @@ export class EmployeeController {
             employee:newEmployee
         }
     }
+
+    /**
+     * 更新用户接口
+     */
+    @Post('update/:id')
+    @Roles('admin')
+    @ApiParam({name:'id',description:'根据id更新用户'})
+    @ApiBody({
+        type:EmployeeEntity
+    })
+    @HttpCode(201)
+    async updateEmployee(@Param() {id},@Body() newInfo){
+        const {username,name,sex,userType,password} = newInfo;
+        id = parseInt(id);
+        await this.employeeService.updateUser(id,username,name,sex,userType,password)
+        return {
+            message:'更新成功',
+        }
+    }
 }
