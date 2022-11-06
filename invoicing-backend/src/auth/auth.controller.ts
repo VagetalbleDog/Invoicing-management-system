@@ -1,7 +1,9 @@
 import { Body, Controller, Get, Post, } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ValidateService } from 'src/utils/svg.validate';
+import { ApiTags } from '@nestjs/swagger';
 @Controller('auth')
+@ApiTags('登录和权限认证模块')
 export class AuthController {
     constructor(
         private readonly authService:AuthService,

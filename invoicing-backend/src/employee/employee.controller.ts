@@ -6,6 +6,7 @@ import { AuthGuard } from 'src/auth/auth.guard';
 import { EmployeeEntity } from './employee.entity';
 @Controller('employee')
 @UseGuards(AuthGuard)
+@ApiTags('雇员模块')
 export class EmployeeController {
     constructor(
         private readonly employeeService:EmployeeService
@@ -66,7 +67,8 @@ export class EmployeeController {
      */
     @Post('register')
     @ApiBody({
-        type:EmployeeEntity
+        type:EmployeeEntity,
+        description:'注册用户，需要传入除id以外的其他字段',
     })
     @HttpCode(201)
     async registerUser(@Body() user:any){
@@ -97,7 +99,9 @@ export class EmployeeController {
     @Roles('admin')
     @ApiParam({name:'id',description:'根据id更新用户'})
     @ApiBody({
-        type:EmployeeEntity
+        type:EmployeeEntity,
+        description:'传入需要修改的字段即可',
+        required:false
     })
     @HttpCode(201)
     async updateEmployee(@Param() {id},@Body() newInfo){
