@@ -5,7 +5,9 @@ import { LoggerMiddleWare } from './common/middleware/logger.middleware';
 import { EmployeeModule } from './employee/employee.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EmployeeEntity } from './employee/employee.entity';
+import { ShopEntity } from './shop/shop.entity';
 import { AuthModule } from './auth/auth.module';
+import { ShopModule } from './shop/shop.module';
 @Module({
   controllers: [AppController],
   providers: [AppService],
@@ -16,8 +18,8 @@ import { AuthModule } from './auth/auth.module';
     username:'root',
     password:'zwf.20010928-3',
     database:'InvocingDatabase',
-    entities:[EmployeeEntity],
-  }),EmployeeModule, AuthModule],
+    entities:[ShopEntity,EmployeeEntity],
+  }),EmployeeModule, AuthModule, ShopModule],
 })
 export class AppModule implements NestModule{
   configure(consumer: MiddlewareConsumer) {
