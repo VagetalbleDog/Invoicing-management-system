@@ -8,6 +8,9 @@ import { EmployeeEntity } from './employee/employee.entity';
 import { ShopEntity } from './shop/shop.entity';
 import { AuthModule } from './auth/auth.module';
 import { ShopModule } from './shop/shop.module';
+import { OrderModule } from './order/order.module';
+import { SupplierModule } from './supplier/supplier.module';
+import { SupplierEntity } from './supplier/supplier.entity';
 @Module({
   controllers: [AppController],
   providers: [AppService],
@@ -18,8 +21,8 @@ import { ShopModule } from './shop/shop.module';
     username:'root',
     password:'zwf.20010928-3',
     database:'InvocingDatabase',
-    entities:[ShopEntity,EmployeeEntity],
-  }),EmployeeModule, AuthModule, ShopModule],
+    entities:[SupplierEntity,ShopEntity,EmployeeEntity],
+  }),EmployeeModule, AuthModule, ShopModule, OrderModule, SupplierModule],
 })
 export class AppModule implements NestModule{
   configure(consumer: MiddlewareConsumer) {
