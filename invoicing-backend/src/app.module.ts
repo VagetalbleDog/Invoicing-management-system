@@ -11,6 +11,7 @@ import { ShopModule } from './shop/shop.module';
 import { OrderModule } from './order/order.module';
 import { SupplierModule } from './supplier/supplier.module';
 import { SupplierEntity } from './supplier/supplier.entity';
+import { OrderEntity } from './order/order.entity';
 @Module({
   controllers: [AppController],
   providers: [AppService],
@@ -21,7 +22,8 @@ import { SupplierEntity } from './supplier/supplier.entity';
     username:'root',
     password:'zwf.20010928-3',
     database:'InvocingDatabase',
-    entities:[SupplierEntity,ShopEntity,EmployeeEntity],
+    entities:[OrderEntity,EmployeeEntity,ShopEntity,SupplierEntity],
+    // synchronize:true
   }),EmployeeModule, AuthModule, ShopModule, OrderModule, SupplierModule],
 })
 export class AppModule implements NestModule{

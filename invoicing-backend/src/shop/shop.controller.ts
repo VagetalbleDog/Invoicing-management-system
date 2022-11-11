@@ -24,46 +24,40 @@ export class ShopController {
     @Roles()
     async query(@Query() query){
         let {shopName,id,shopType} = query;
-        id = parseInt(id),shopType = parseInt(shopType);
+        if(id){id = parseInt(id)};
+        if(shopType){shopType = parseInt(shopType)}
         return this.shopService.find(shopName,shopType,id);
     }
 
     /**
      * 进货接口
      */
-    @Post('purchase/:id')
-    @ApiParam({
-        name:'id',
-        description:'商品id'
-    })
+    @Post('purchase')
     @ApiBody({
-        description:"进货数量和操作员id"
+        description:"进货数量、操作员id、供应商id、商品id"
     })
     @HttpCode(201)
-    @Roles('purchase')
-    async purchase(@Param() {id},@Body() {num,employeeId}){
-        id = parseInt(id);
+    @Roles('purchase','admin')
+    async purchase(@Body() {shopId,num,employeeId,supplierId}){
+        const id = parseInt(shopId);
         num = parseInt(num);
         employeeId = parseInt(employeeId);
-        return this.shopService.purcase(id,num,employeeId)
+        supplierId = parseInt(supplierId);
+        return this.shopService.purcase(id,num,supplierId,employeeId)
     };
 
 
     /**
      * 售货接口
      */
-    @Post('sale/:id')
+    @Post('sale')
     @HttpCode(201)
-    @ApiParam({
-        name:'id',
-        description:'商品id'
-    })
     @ApiBody({
-        description:"售货数量和操作员id"
+        description:"售货数量、操作员id、商品id"
     })
-    @Roles('sale')
-    async sale(@Param() {id},@Body() {num,employeeId}){
-        id = parseInt(id);
+    @Roles('sale','admin')
+    async sale(@Body() {num,employeeId,shopId}){
+        const id = parseInt(shopId);
         num = parseInt(num);
         employeeId = parseInt(employeeId);
         return this.shopService.sale(id,num,employeeId)

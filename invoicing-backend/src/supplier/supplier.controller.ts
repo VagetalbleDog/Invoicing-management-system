@@ -24,7 +24,13 @@ export class SupplierController {
         description:'根据供应商名查询',
         name:'supplierName'
     })
-    async find(@Query() {supplierName}){
-       return this.SupplierService.find(supplierName);
+    @ApiQuery({
+        required:false,
+        description:'根据id查询',
+        name:'id'
+    })
+    async find(@Query() {supplierName,id}){
+        if(id){id = parseInt(id)}
+       return this.SupplierService.find(supplierName,id);
     }
 }
