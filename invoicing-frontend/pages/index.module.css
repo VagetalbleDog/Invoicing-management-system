@@ -1,0 +1,17 @@
+.header_welcome{
+    position: absolute;
+    left: 80px;
+    top:5px;
+    color: #ffbf00;
+    display: inline;
+    font-size: large;
+}
+.title{
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+    display: inline;
+    color: #108ee9;
+    font-size: 25px;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif
+}
