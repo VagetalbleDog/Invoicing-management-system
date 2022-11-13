@@ -2,15 +2,21 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const devMode = process.env.NODE_ENV !== 'production';
-
+const webpack = require("webpack");
 module.exports = {
   entry: {
-    app: path.resolve(__dirname, '../src/index.js'),
+    app: path.resolve(__dirname, '../src/index.tsx'),
   },
   output: {
     filename: devMode ? '[name].js' : '[name].[hash].js',
     path: path.resolve(__dirname, '../dist'),
-    publicPath: './',
+    publicPath: '/',
+  },
+  resolve:{
+    extensions:['.js','.jsx','.ts','.tsx'],
+    alias:{
+      '@':path.resolve(__dirname,'../src'),
+    }
   },
   module: {
     rules: [
@@ -22,6 +28,11 @@ module.exports = {
           minimize: !devMode,
         },
       },
+      {
+        test:/(\.js(x?))|(\.ts(x?))$/,
+        exclude:/[\\/]node_modules[\\/]/,
+        loader:'babel-loader',
+      }
     ],
   },
   plugins: [
@@ -31,5 +42,19 @@ module.exports = {
       template: path.resolve(__dirname, '../src/index.html'),
       filename: 'index.html',
     }),
+    new webpack.ProvidePlugin({
+      React: 'react',
+    }),
   ],
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        commons: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          chunks: 'all'
+        },
+      },
+    },
+  },
 }

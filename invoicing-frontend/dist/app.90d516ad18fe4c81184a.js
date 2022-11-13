@@ -1,1 +1,0 @@
-window.onload=()=>{const e=document.getElementById("root"),t=document.createElement("h1");t.textContent="使用webpack创建一个适用于react项目的脚手架",e.appendChild(t)};
