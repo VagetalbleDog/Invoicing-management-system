@@ -3,41 +3,42 @@ import { Button, Checkbox, Form, Input, message } from 'antd';
 import { useEffect, useState } from 'react';
 import Fetch from '../../utils/fetch';
 
-const login = async (username:string,password:string):Promise<any>=>{
-    return Fetch('/api/auth/login',undefined,{
+const login = async (username: string, password: string): Promise<any> => {
+    return Fetch('/api/auth/login', undefined, {
         username,
         password
-    },2).then((res)=>{
-        if(res.code&&res.code===401){message.error('用户名或密码错误'); return false;}
-        sessionStorage.setItem('key',res.access_token)
+    }, 2).then((res) => {
+        if (res.code && res.code === 401) { message.error('用户名或密码错误'); return false; }
+        sessionStorage.setItem('key', res.access_token);
+        sessionStorage.setItem('username', username);
         return true
     })
 }
-const Login: React.FC = ({setLogged}:any) => {
+const Login: React.FC = ({ setLog }: any) => {
 
-    const [svg,setSvg] = useState({
-        data:'',
-        text:''
+    const [svg, setSvg] = useState({
+        data: '',
+        text: ''
     })
-    const requestSvg = ()=>{
-        Fetch('/api/auth/code').then((res)=>{
+    const requestSvg = () => {
+        Fetch('/api/auth/code').then((res) => {
             setSvg({
-                data:res.svg,
-                text:res.text
+                data: res.svg,
+                text: res.text
             })
         })
     }
     const onFinish = (values: any) => {
-        const {username,password,validate} = values;
-        if(validate.toLowerCase() !==svg.text.toLowerCase()){
+        const { username, password, validate } = values;
+        if (validate.toLowerCase() !== svg.text.toLowerCase()) {
             message.error('验证码错误');
-            console.log(svg.text,validate)
+            console.log(svg.text, validate)
             return;
         }
-        login(username,password).then((res)=>{
-            if(res){
+        login(username, password).then((res) => {
+            if (res) {
+                setLog(true);
                 message.success(`欢迎您!`);
-                setLogged(true);
             }
         })
     };
@@ -70,10 +71,10 @@ const Login: React.FC = ({setLogged}:any) => {
                     <Input.Password />
                 </Form.Item>
                 <div className={styles.validate}>
-                <Form.Item name="validate" label="请输入验证码：">
-                    <Input style={{ width: 150 }} />
-                </Form.Item>
-                <span className={styles.svg} onClick={requestSvg} dangerouslySetInnerHTML={{__html:svg.data}}></span>
+                    <Form.Item name="validate" label="请输入验证码：">
+                        <Input style={{ width: 150 }} />
+                    </Form.Item>
+                    <span className={styles.svg} onClick={requestSvg} dangerouslySetInnerHTML={{ __html: svg.data }}></span>
                 </div>
 
                 <Form.Item wrapperCol={{ offset: 8, span: 16 }}>

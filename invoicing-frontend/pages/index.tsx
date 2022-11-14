@@ -11,9 +11,9 @@ const App:React.FC = ()=>{
     }
   })
   if(logged){
-    return <Home setLogged={setLogged}/>
+    return <Home setLog={setLogged}/>
   }else{
-    return <Login setLogged={setLogged}/>
+    return <Login setLog={setLogged}/>
   }
 }
 

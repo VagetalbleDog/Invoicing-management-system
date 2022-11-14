@@ -19,7 +19,7 @@ export class EmployeeController {
     @ApiQuery({name:'id',required:false,description:'根据id查询用户'})
     @ApiQuery({name:'name',required:false,description:'根据name查询用户'})
     @ApiQuery({name:'username',required:false,description:'根据username查询用户'})
-    @Roles('admin')
+    @Roles('admin','sale','purchase')
     async query(@Query() query){
         const {username,id,name} = query;
         const users = await this.employeeService.find(name,username,id);
