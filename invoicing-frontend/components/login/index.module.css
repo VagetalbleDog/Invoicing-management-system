@@ -1,0 +1,31 @@
+.container{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 50px;
+    background: url('./bg2.png') no-repeat;
+    background-size: cover;
+}
+.validate{
+    position: relative;
+    align-items: center;
+    justify-content: center;
+}
+.svg{
+    position: absolute;
+    left: 400px;
+    top:0px;
+}
+.title{
+  background-image: linear-gradient(#FD6585, #0D25B9);
+  background-clip: text;
+  font-size: 38px;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent; /*需要文字透明*/
+}
+.welcome{
+    font-size: 20px;
+}
