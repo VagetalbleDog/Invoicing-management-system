@@ -8,7 +8,7 @@ import Employee from '../employee';
 import Order from '../order';
 import Shop from '../shop';
 import Supplier from '../supplier';
-import { Avatar, Button, MenuProps, message } from 'antd';
+import { Avatar, Button, MenuProps, message, } from 'antd';
 import { Layout, Menu } from 'antd';
 import React, { useEffect, useState } from 'react';
 import styles from './index.module.css'
@@ -79,15 +79,14 @@ const Home: React.FC = ({ setLog }: any) => {
       ]
     }else{
       return [
-        getItem(<div children="商品管理" onClick={() => setTabIndex(0)} />, '2', <DesktopOutlined />),
-        getItem(<div children="订单管理" onClick={() => setTabIndex(2)} />, '4', <MailOutlined />),
-        getItem(<div children="供应商管理" onClick={() => setTabIndex(1)} />, '3', <ContainerOutlined />),
+        getItem(<div children="商品管理" onClick={() => setTabIndex(0)} />, '1', <DesktopOutlined />),
+        getItem(<div children="订单管理" onClick={() => setTabIndex(2)} />, '3', <MailOutlined />),
+        getItem(<div children="供应商管理" onClick={() => setTabIndex(1)} />, '2', <ContainerOutlined />),
       ]
     }
   }
   useEffect(()=>{
     fetchUserName(sessionStorage.getItem('username') as string).then(employee=>{
-      console.log(employee)
       setEmpolyee(employee)
     })
   },[])
@@ -104,7 +103,7 @@ const Home: React.FC = ({ setLog }: any) => {
         }}
       >
         <div className="logo" />
-        <Menu theme="dark" mode="inline" defaultSelectedKeys={['2']} items={items(employee.userType)} />
+        <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']} items={items(employee.userType)} />
       </Sider>
       <Layout className="site-layout" style={{ marginLeft: 200 }}>
         <Header className="site-layout-background" style={{ padding: 0, position: 'relative' }}>

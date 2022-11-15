@@ -1,0 +1,11 @@
+.start{
+    font-weight: 1000;
+    font-size: 28px;
+    margin-right: 5px;
+}
+.startCtn{
+    position: relative;
+    left: 0;
+    width: max-content;
+    font-size: 20px;
+}
