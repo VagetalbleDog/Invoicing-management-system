@@ -1,11 +1,17 @@
-.start{
+.start {
     font-weight: 1000;
     font-size: 28px;
     margin-right: 5px;
 }
-.startCtn{
+
+.startCtn {
     position: relative;
     left: 0;
     width: max-content;
     font-size: 20px;
+}
+
+.secondLine {
+    display: flex;
+    justify-content: space-between;
 }

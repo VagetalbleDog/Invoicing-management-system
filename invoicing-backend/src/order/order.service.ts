@@ -11,39 +11,39 @@ import { SupplierService } from 'src/supplier/supplier.service';
 export class OrderService {
     constructor(
         @InjectRepository(OrderEntity)
-        private readonly orderRepository:Repository<OrderEntity>,
-        private readonly employeeService:EmployeeService,
-        private readonly supplierService:SupplierService
-    ){}
+        private readonly orderRepository: Repository<OrderEntity>,
+        private readonly employeeService: EmployeeService,
+        private readonly supplierService: SupplierService
+    ) { }
 
     /**
      * 查询所有订单信息
      * @Query id
      */
-    async find(orderId:number|undefined){
-        return this.orderRepository.find({relations:["employee","supplier","shop"],where:{'id':orderId}})
+    async find(orderId: number | undefined) {
+        return this.orderRepository.find({ relations: ["employee", "supplier", "shop"], where: { 'id': orderId } })
     }
     /**
      * 生成订单
      */
-    async create(orderType:OrderType,employeeId:number,shop:ShopEntity,num:number,supplierId?:number){
+    async create(orderType: OrderType, employeeId: number, shop: ShopEntity, num: number, supplierId?: number) {
         //生成订单号
         const orderId = createOrderId();
-        const employee = (await this.employeeService.find(undefined,undefined,employeeId))[0]
-        const supplier = supplierId?(await this.supplierService.find(undefined,supplierId))[0]:undefined;
+        const employee = (await this.employeeService.find(undefined, undefined, employeeId, undefined))[0]
+        const supplier = supplierId ? (await this.supplierService.find(undefined, supplierId))[0] : undefined;
 
         await this.orderRepository.insert({
-            id:orderId,
+            id: orderId,
             orderType,
             employee,
             shop,
             supplier,
-            createTime:new Date(),
-            price:shop.price,
-            num:num
+            createTime: new Date(),
+            price: shop.price,
+            num: num
         });
         return {
-            message:'订单创建成功',
+            message: '订单创建成功',
             orderId
         }
     }

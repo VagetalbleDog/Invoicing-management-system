@@ -79,7 +79,7 @@ const Login: React.FC = ({ setLog }: any) => {
 
                 <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                     <Button type="primary" htmlType="submit">
-                        Submit
+                        登录
                     </Button>
                 </Form.Item>
             </Form>
