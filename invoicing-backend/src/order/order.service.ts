@@ -20,8 +20,8 @@ export class OrderService {
      * 查询所有订单信息
      * @Query id
      */
-    async find(orderId: number | undefined) {
-        return this.orderRepository.find({ relations: ["employee", "supplier", "shop"], where: { 'id': orderId } })
+    async find(orderId: number | undefined, orderType: number | undefined) {
+        return this.orderRepository.find({ relations: ["employee", "supplier", "shop"], where: { 'id': orderId, "orderType": orderType } })
     }
     /**
      * 生成订单
