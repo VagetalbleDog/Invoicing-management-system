@@ -87,6 +87,15 @@ const column: ColumnsType = [
         }
     },
     {
+        title: '交易单价',
+        dataIndex: 'shop',
+        key: "single",
+        align: 'center',
+        render: (_, record: any) => {
+            return record.orderType == 1 ? record.shop.purchasePrice : record.shop.price
+        }
+    },
+    {
         title: '交易数量',
         dataIndex: 'num',
         key: 'num',
@@ -99,7 +108,7 @@ const column: ColumnsType = [
         align: 'center',
         render: (_, record: any) => {
             if (record.orderType === 1) {
-                return <Tag color="red">{`- ${record.num * record.shop.price}`}</Tag>
+                return <Tag color="red">{`- ${record.num * record.shop.purchasePrice}`}</Tag>
             } else {
                 return <Tag color="green">{`+ ${record.num * record.shop.price}`}</Tag>
             }

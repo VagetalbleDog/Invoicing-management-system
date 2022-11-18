@@ -1,4 +1,4 @@
-import { Button, message, Popconfirm, Table, Tag, notification, Modal, InputNumber, Form } from "antd";
+import { Button, message, Popconfirm, Table, Tag, notification, Modal, InputNumber, Form, Select } from "antd";
 import React, { useCallback } from "react";
 import { useEffect, useState } from "react";
 import type { ColumnsType } from 'antd/es/table';
@@ -31,13 +31,26 @@ const fetchShop = async (id?: number, shopName?: string, shopType?: ShopType) =>
     }
     return Fetch(url, token)
 }
+const fetchSupplier = async (id?: number, supplierName?: string) => {
+    let url = `/api/supplier?`;
+    const token = sessionStorage.getItem('key');
+    if (id) { url += `id=${id}&` };
+    if (supplierName) { supplierName += `supplierName=${supplierName}` }
+    if (!token) {
+        message.error('您还未登录');
+        return;
+    }
+    return Fetch(url, token)
+}
 const Color = ['pink', 'green', 'yellow', 'blue', 'cyan']
 const Shop: React.FC = React.memo(() => {
     const [data, setData] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [shopId, setShopId] = useState(0);
-    const [form] = Form.useForm();
+    const [form1] = Form.useForm();
+    const [form2] = Form.useForm();
     const [showPurchase, setShowPurchase] = useState(false);
+    const [option, setOptions] = useState([]);
     const sale = useCallback(async (shopId: number | string, num: number | string) => {
         const token = sessionStorage.getItem('key');
         const employeeId = sessionStorage.getItem('id');
@@ -65,6 +78,41 @@ const Shop: React.FC = React.memo(() => {
                 fetchShop().then(res => setData(res));
                 return true;
             }
+        })
+    }, [])
+    const purchase = useCallback(async (shopId: number | string, num: number | string, supplierId: number | string) => {
+        const token = sessionStorage.getItem('key');
+        const employeeId = sessionStorage.getItem('id');
+        if (!token || !employeeId) {
+            message.error('您还未登录')
+            return;
+        }
+        if (!num) {
+            num = 0;
+        }
+        if (!supplierId) {
+            message.error('请选择供应商!');
+            return;
+        }
+        return Fetch('/api/shop/purchase', token, {
+            shopId,
+            num,
+            supplierId,
+            employeeId
+        }, 2).then(res => {
+            if (!res) {
+                notification['error']({
+                    message: '采购货物失败',
+                    description: 'maybe供应商跑路了?'
+                })
+                return false;
+            }
+            notification['success']({
+                message: '采购成功',
+                description: `商品成功采购，已经入仓!  订单号:\n${res.orderId} 您可以前往订单模块查看!`
+            })
+            fetchShop().then(res => setData(res));
+            return true;
         })
     }, [])
     const column: ColumnsType = [
@@ -114,7 +162,19 @@ const Shop: React.FC = React.memo(() => {
                 return <>
                     <Button onClick={() => { setShowModal(true); setShopId(record.id) }} disabled={userType !== '3'} type="primary">售出</Button>
                     &nbsp;&nbsp;
-                    <Button onClick={() => { setShowPurchase(true); setShopId(record.id) }} type="primary" disabled={userType !== '2'}>进货</Button>
+                    <Button onClick={() => {
+                        setShowPurchase(true);
+                        fetchSupplier().then(res => {
+                            const suppliers = res.filter((sup: any) => sup.saleShops.some((i: any) => { return i.id === record.id }))
+                            const options = suppliers.map((i: any) => {
+                                return { label: i.supplierName, value: i.id }
+                            })
+                            form2.resetFields();
+                            setOptions(options)
+                        }).then(() => {
+                            setShopId(record.id);
+                        })
+                    }} type="primary" disabled={userType !== '2'}>进货</Button>
                 </>
             }
         }
@@ -128,15 +188,22 @@ const Shop: React.FC = React.memo(() => {
         <div className={styles.secondLine}>
             <Search flushData={setData} />
         </div>
-        <Modal title="售货" destroyOnClose open={showModal} onOk={() => { sale(shopId, form.getFieldValue('num')).then(res => { res ? setShowModal(false) : "" }) }} onCancel={() => setShowModal(false)}>
-            <Form form={form}>
+        <Modal title="售货" destroyOnClose open={showModal} onOk={() => { sale(shopId, form1.getFieldValue('num')).then(res => { res ? setShowModal(false) : "" }) }} onCancel={() => setShowModal(false)}>
+            <Form form={form1}>
                 <Form.Item name='num' label="请输入交易数量" required>
                     <InputNumber min={0} placeholder="请输入数量" />
                 </Form.Item>
             </Form>
         </Modal>
-        <Modal destroyOnClose open={showPurchase} onCancel={() => setShowPurchase(false)} title="进货">
-
+        <Modal onOk={() => { purchase(shopId, form2.getFieldValue('num'), form2.getFieldValue('supplierId')).then(res => { res ? setShowPurchase(false) : "" }) }} open={showPurchase} onCancel={() => setShowPurchase(false)} title="进货">
+            <Form form={form2}>
+                <Form.Item name='num' label="请输入交易数量" required>
+                    <InputNumber style={{ width: 135 }} min={0} placeholder="请输入数量" />
+                </Form.Item>
+                <Form.Item name='supplierId' label="请选择供应商" required>
+                    <Select style={{ width: 150 }} options={option}></Select>
+                </Form.Item>
+            </Form>
         </Modal>
         <Table dataSource={data} columns={column as any} /></>
 })
