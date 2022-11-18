@@ -21,7 +21,7 @@ export class OrderService {
      * @Query id
      */
     async find(orderId: number | undefined, orderType: number | undefined) {
-        return this.orderRepository.find({ relations: ["employee", "supplier", "shop"], where: { 'id': orderId, "orderType": orderType } })
+        return this.orderRepository.find({ relations: ["employee", "supplier", "shop"], where: { 'id': orderId, "orderType": orderType }, order: { 'createTime': 'DESC' } })
     }
     /**
      * 生成订单

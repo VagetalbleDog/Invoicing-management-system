@@ -45,9 +45,17 @@ const column: ColumnsType = [
         align: 'center',
         render: (_, record: any) => {
             const time = record.createTime;
-            const day = time.slice(0, 10);
+            const date = time.slice(0, 10);
             const hour = time.slice(11, 19);
-            return `${day} ${hour}`
+            let [year, month, day] = date.split('-');
+            day = Number(day);
+            let [hours, min, sec] = hour.split(':')
+            hours = Number(hours) + 8;
+            if (hours >= 24) {
+                hours -= 24;
+                day++;
+            }
+            return `${year}-${month}-${day} ${hours}:${min}:${sec}`
         }
     },
     {

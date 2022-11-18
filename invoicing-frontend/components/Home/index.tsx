@@ -16,16 +16,16 @@ import Fetch from '../../utils/fetch';
 
 const { Header, Content, Footer, Sider } = Layout;
 
-const Tab = (index: number,userType:number) => {
-  switch(userType){
+const Tab = (index: number, userType: number) => {
+  switch (userType) {
     case 1:
       return [<Employee />, <Shop />, <Supplier />, <Order />][index];
     default:
       return [<Shop />, <Supplier />, <Order />][index];
   }
 }
-const GetRole = (userType:number)=>{
-  switch(userType){
+const GetRole = (userType: number) => {
+  switch (userType) {
     case 1:
       return '管理员';
     case 2:
@@ -34,21 +34,21 @@ const GetRole = (userType:number)=>{
       return '销售员';
   }
 }
-const fetchUserName = async(username:string)=>{
-  return Fetch(`/api/employee?username=${username}`,sessionStorage.getItem('key') as string).then(res=>res[0])
+const fetchUserName = async (username: string) => {
+  return Fetch(`/api/employee?username=${username}`, sessionStorage.getItem('key') as string).then(res => res[0])
 }
 const Home: React.FC = ({ setLog }: any) => {
-  const logout = ()=>{
+  const logout = () => {
     sessionStorage.clear();
     setLog(false);
     message.success('已注销！')
   }
-  const [employee,setEmpolyee] = useState({
-    id:1,
-    name:'',
-    username:"",
-    userType:1,
-    sex:1
+  const [employee, setEmpolyee] = useState({
+    id: 1,
+    name: '',
+    username: "",
+    userType: 1,
+    sex: 1
   })
   const [tabIndex, setTabIndex] = useState(0);
   type MenuItem = Required<MenuProps>['items'][number];
@@ -69,15 +69,15 @@ const Home: React.FC = ({ setLog }: any) => {
     } as MenuItem;
   }
 
-  const items = (userType:number): MenuItem[]=>{
-    if(userType===1){
+  const items = (userType: number): MenuItem[] => {
+    if (userType === 1) {
       return [
         getItem(<div children="员工信息管理" onClick={() => setTabIndex(0)} />, '1', <PieChartOutlined />),
         getItem(<div children="商品管理" onClick={() => setTabIndex(1)} />, '2', <DesktopOutlined />),
         getItem(<div children="供应商管理" onClick={() => setTabIndex(2)} />, '3', <ContainerOutlined />),
         getItem(<div children="订单管理" onClick={() => setTabIndex(3)} />, '4', <MailOutlined />),
       ]
-    }else{
+    } else {
       return [
         getItem(<div children="商品管理" onClick={() => setTabIndex(0)} />, '1', <DesktopOutlined />),
         getItem(<div children="订单管理" onClick={() => setTabIndex(2)} />, '3', <MailOutlined />),
@@ -85,11 +85,13 @@ const Home: React.FC = ({ setLog }: any) => {
       ]
     }
   }
-  useEffect(()=>{
-    fetchUserName(sessionStorage.getItem('username') as string).then(employee=>{
+  useEffect(() => {
+    fetchUserName(sessionStorage.getItem('username') as string).then(employee => {
+      sessionStorage.setItem('userType', employee.userType);
+      sessionStorage.setItem('id', employee.id)
       setEmpolyee(employee)
     })
-  },[])
+  }, [])
   return (
     <Layout hasSider>
       <Sider
@@ -107,15 +109,15 @@ const Home: React.FC = ({ setLog }: any) => {
       </Sider>
       <Layout className="site-layout" style={{ marginLeft: 200 }}>
         <Header className="site-layout-background" style={{ padding: 0, position: 'relative' }}>
-          <Avatar style={{ backgroundColor: '#f56a00', verticalAlign: "left", marginLeft: '20px',marginRight:"20px" }} size={55}>
-            {employee.name.slice(0,3)}
+          <Avatar style={{ backgroundColor: '#f56a00', verticalAlign: "left", marginLeft: '20px', marginRight: "20px" }} size={55}>
+            {employee.name.slice(0, 3)}
           </Avatar>
           <div className={styles.header_welcome}>欢迎，{GetRole(employee.userType)}!&nbsp;&nbsp;&nbsp;<Button onClick={logout} type="primary">点击注销</Button></div>
           <div className={styles.title}>进销存数据管理系统</div>
         </Header>
         <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
           <div className="site-layout-background" style={{ padding: 24, textAlign: 'center' }}>
-            {Tab(tabIndex,employee.userType)}
+            {Tab(tabIndex, employee.userType)}
           </div>
         </Content>
         <Footer style={{ textAlign: 'center' }}>进销存信息管理系统 ©2022 Created by Zhu Wenfu</Footer>

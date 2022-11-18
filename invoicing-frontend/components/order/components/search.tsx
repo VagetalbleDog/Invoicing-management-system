@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { message, Form, Input, Select, Button } from 'antd'
+import { message, Form, Input, Select, Button, InputNumber } from 'antd'
 import Fetch from "../../../utils/fetch";
 
 const fetchOrder = async (id?: number, orderType?: number) => {
@@ -28,7 +28,7 @@ const Search = React.memo(({ flushData }: any) => {
     return <div style={{ margin: '10px 0' }}>
         <Form layout="inline" onReset={resetData} onValuesChange={onSearch}>
             <Form.Item name='id' label="订单id">
-                <Input />
+                <InputNumber min={0} style={{ width: 150 }} />
             </Form.Item>
             <Form.Item name='orderType' label="订单类型">
                 <Select style={{ width: 100 }} options={[{ value: 1, label: '采购' }, { value: 2, label: "销售" }]} />
